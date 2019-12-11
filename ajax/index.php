@@ -20,7 +20,7 @@
     <!-- JS: HANDLEBARS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js" charset="utf-8"></script>
 
-<!-- Stampare a schermo una decina di dischi musicali
+<!-- Stampare a schermo una decina di dischi musicali 
 (vedi screenshot) in due modi diversi:
 - Solo con l'utilizzo di PHP, che stampa
 direttamente i dischi in pagina: al caricamento
@@ -34,10 +34,17 @@ Opzionale:
 - Attraverso un'altra chiamata ajax, filtrare gli
 album per artista -->
 
-  <?php
-    include "data.php";
-    // include "helper.php";
-  ?>
+    <!-- TEMPLATE: MESSAGE MENU -->
+    <script id="record-template" type="text/x-handlebars-template">
+      <div class="record">
+
+        <h1>{{title}}</h1>
+        <h2>{{author}}</h2>
+        <h3>{{year}}</h3>
+        <img src="{{poster}}">
+
+      </div>
+    </script>
 
     <!-- CSS: MY STYLE -->
     <link rel="stylesheet" href="style.css">
@@ -46,22 +53,7 @@ album per artista -->
     <script src="main.js" charset="utf-8"></script>
   </head>
   <body>
-
-    <div>
-
-    <?php
-
-      foreach ($database as $record) { ?>
-
-        <h1> <?php echo $record['title'] ?> </h1>
-        <h2> <?php echo $record['author'] ?> </h2>
-        <h3> <?php echo $record['year'] ?> </h3>
-        <img src="<?php echo $record['poster'] ?>">
-
-      <?php }
-
-     ?>
-
-  </div>
+    <div id="container" class="container">
+    </div>
   </body>
 </html>
