@@ -83,20 +83,34 @@ function printChartTeamEfficiency(data) {
   });
 }
 
-function getData() {
+function getData(access) {
 
   $.ajax({
 
     url: "getAll.php",
     method: "GET",
+
+    data: {
+      access: access
+    },
+
     success: function(data) {
       console.log("data", data);
 
-      printChartFatturato(data['fatturato']);
+      if (data['fatturato']) {
+        printChartFatturato(data['fatturato']);
 
-      printChartFatturatoByAgent(data['fatturato_by_agent']);
+      } else if (data['fatturato_by_agent']) {
+        printChartFatturato(data['fatturato']);
+        printChartFatturatoByAgent(data['fatturato_by_agent']);
 
-      printChartTeamEfficiency(data['team_efficiency']);
+      } else if (data['team_efficiency']) {
+        printChartFatturato(data['fatturato']);
+        printChartFatturatoByAgent(data['fatturato_by_agent']);
+        printChartTeamEfficiency(data['team_efficiency']);
+      }
+
+      
 
     },
     error: function(error) {
