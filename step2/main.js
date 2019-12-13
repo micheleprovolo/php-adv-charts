@@ -2,12 +2,12 @@ function printChartFatturato(data) {
 
   var ctx = document.getElementById('fatturato').getContext('2d');
   new Chart(ctx, {
-    type: 'line',
+    type: data['type'],
     data: {
       labels: moment.months(),
       datasets: [{
         label: 'Fatturato',
-        data: data.fatturato.data,
+        data: data['data'],
         backgroundColor: [
                 'green'
             ],
@@ -21,14 +21,17 @@ function printChartFatturato(data) {
 
 function printChartFatturatoByAgent(data) {
 
+  var names = Object.keys(data['data']);
+  var values = Object.values(data['data']);
+
   var ctx = document.getElementById('fatturato-by-agent').getContext('2d');
   new Chart(ctx, {
-    type: 'pie',
+    type: data['type'],
     data: {
-      labels: Object.keys(data.fatturato_by_agent.data),
+      labels: names,
       datasets: [{
         label: 'Fatturato by agent',
-        data: Object.values(data.fatturato_by_agent.data),
+        data: values,
         backgroundColor: [
                 'red',
                 'blue',
@@ -53,9 +56,9 @@ function getData() {
     success: function(data) {
       console.log("data", data);
 
-      printChartFatturato(data);
+      printChartFatturato(data['fatturato']);
 
-      printChartFatturatoByAgent(data);
+      printChartFatturatoByAgent(data['fatturato_by_agent']);
 
     },
     error: function(error) {
