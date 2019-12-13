@@ -97,14 +97,14 @@ function getData(access) {
     success: function(data) {
       console.log("data", data);
 
-      if (data['fatturato']) {
+      if () {
         printChartFatturato(data['fatturato']);
 
-      } else if (data['fatturato_by_agent']) {
+      } else if () {
         printChartFatturato(data['fatturato']);
         printChartFatturatoByAgent(data['fatturato_by_agent']);
 
-      } else if (data['team_efficiency']) {
+      } else if () {
         printChartFatturato(data['fatturato']);
         printChartFatturatoByAgent(data['fatturato_by_agent']);
         printChartTeamEfficiency(data['team_efficiency']);
