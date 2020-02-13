@@ -5,18 +5,37 @@
   include "data_step3.php";
 
   //salvo in variabile il valore che viene inserito nell'url
-  $access = $_GET['access'];
+  $level = $_GET['level'];
 
   $res = [];
 
-  if ($access == $graphs['fatturato']['access']) {
-    $res[] = $graphs['fatturato'];
+  //ciclo per ottenere i singoli grafici
+  foreach ($graphs as $name => $graph) {
 
-  } else if ($access == $graphs['fatturato_by_agent']['access']) {
-    $res[] = $graphs['fatturato_by_agent'], $graphs['fatturato'];
+    //salvo in una variabile il valore di access, cioè il livello del grafico
+    $gLevel = $graph['access'];
 
-  } else if ($access == $graphs['team_efficiency']['access']) {
-    $res[] = $graphs['fatturato_by_agent'], $graphs['fatturato'], $graphs['team_efficiency'];
+    //se il grafico che ho in mano è di livello guest, posso pusharlo tranquillamente
+    if ($gLevel == 'guest') {
+
+    //prendo la key $name e la pusho dentro per ogni elemento
+      $res[$name] = $graph;
+    }
+    //lo stesso se il grafico è di livello clevel e il valore inserito dall'utente è clevel
+    if ($gLevel == 'clevel' && $level == 'clevel') {
+
+      //prendo la key $name e la pusho dentro per ogni elemento
+      $res[$name] = $graph;
+    }
+    //se il grafico è di livello employee, devo verificare che il valore inserito dall'utente
+    //sia employee oppure clevel (entrambi possono accedervi)
+    if ($gLevel == 'employee'
+        && ($level == 'employee' || $level == 'clevel')) {
+          
+        //prendo la key $name e la pusho dentro per ogni elemento
+        $res[$name] = $graph;
+    }
   }
+  
 
   echo json_encode($res);

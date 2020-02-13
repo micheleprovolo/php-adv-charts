@@ -1,13 +1,14 @@
-function printChartFatturato(data) {
 
-  var ctx = document.getElementById('fatturato').getContext('2d');
+function printChartFatturato(graph) {
+
+  var ctx = document.getElementById('fatturato').getContext("2d");
   new Chart(ctx, {
-    type: data['type'],
+    type: "line",
     data: {
       labels: moment.months(),
       datasets: [{
         label: 'Fatturato',
-        data: data['data'],
+        data: graph['data'],
         backgroundColor: [
                 'green'
             ],
@@ -19,14 +20,14 @@ function printChartFatturato(data) {
   });
 }
 
-function printChartFatturatoByAgent(data) {
+function printChartFatturatoByAgent(graph) {
 
-  var names = Object.keys(data['data']);
-  var values = Object.values(data['data']);
+  var names = Object.keys(graph['data']);
+  var values = Object.values(graph['data']);
 
-  var ctx = document.getElementById('fatturato-by-agent').getContext('2d');
+  var ctx = document.getElementById('fatturato-by-agent').getContext("2d");
   new Chart(ctx, {
-    type: data['type'],
+    type: 'pie',
     data: {
       labels: names,
       datasets: [{
@@ -47,79 +48,81 @@ function printChartFatturatoByAgent(data) {
   });
 }
 
-function printChartTeamEfficiency(data) {
+function printChartTeamEfficiency(graph) {
 
-  var value1 = Object.values(data['data']['Team1']);
-  var value2 = Object.values(data['data']['Team2']);
-  var value3 = Object.values(data['data']['Team3']);
+  var datasets = [];
+  var names = Object.keys(graph['data']);
+  var values = Object.values(graph['data']);
 
-  var ctx = document.getElementById('team_efficiency').getContext('2d');
-  new Chart(ctx, {
-    type: data['type'],
-    data: {
-      labels: moment.months(),
-      datasets: [{
-        label: "Team1",
-        data: value1,
-        borderColor: [
-          'blue'
-      ]
-      }, {
-        label: "Team2",
-        data: value2,
-        borderColor: [
-          'red'
-      ]
+  for (i=0;i<names.length;i++) {
+
+    datasets.push({
+      label: names[i],
       
-      }, {
-        label: "Team3",
-        data: value3,
-        borderColor: [
-          'green'
-      ]
-      }
-    ]
+      data: values[i]
+    });
+  }
+
+  var ctx = $('#team_efficiency');
+  new Chart(ctx, {
+
+    type: 'line',
+    data: {
+
+      labels: moment.months(),
+      datasets: datasets
     }
   });
 }
 
-function getData(access) {
+function printGraphs(graphs) {
 
+  if (graphs['fatturato']) {
+
+    printChartFatturato(graphs['fatturato']);
+  }
+  if (graphs['fatturato_by_agent']) {
+
+    printChartFatturatoByAgent(graphs['fatturato_by_agent']);
+  }
+  if (graphs['team_efficiency']) {
+
+    printChartTeamEfficiency(graphs['team_efficiency']);
+  }
+}
+
+function getLevelParameter() {
+
+  //oggetto che permette di gestire i paremetri negli url in modo autonomo
+  var urlParams = new URLSearchParams(window.location.search);
+  var levelParam = urlParams.get('level');
+
+  return levelParam;
+}
+
+function getData() {
+
+  var level = getLevelParameter();
+  // console.log(level);
+  
   $.ajax({
 
     url: "getAll.php",
     method: "GET",
-
     data: {
-      access: access
+      level: level
     },
-
     success: function(data) {
+
       console.log("data", data);
-
-      if () {
-        printChartFatturato(data['fatturato']);
-
-      } else if () {
-        printChartFatturato(data['fatturato']);
-        printChartFatturatoByAgent(data['fatturato_by_agent']);
-
-      } else if () {
-        printChartFatturato(data['fatturato']);
-        printChartFatturatoByAgent(data['fatturato_by_agent']);
-        printChartTeamEfficiency(data['team_efficiency']);
-      }
-
-      
-
+      printGraphs(data);
     },
-    error: function(error) {
-      console.log("error", error);
+    error: function(err) {
+
+      console.log("err", err);
     }
   });
 }
-
-
 
 function init() {
   getData();
